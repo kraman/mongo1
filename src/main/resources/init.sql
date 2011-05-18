@@ -8,7 +8,7 @@ DROP USER 'mongo1'@'localhost';
 GRANT USAGE ON msgs.* TO 'mongo1'@'%';
 DROP USER 'mongo1'@'%';
 
---  Create ait users and grant all permissions.
+--  Create mongo1 users and grant all permissions.
 CREATE USER 'mongo1'@'localhost' IDENTIFIED BY 'mongo1';
 GRANT ALL ON msgs.* TO 'mongo1'@'localhost';
 

@@ -1,4 +1,4 @@
-Mongo1 is an example CRUD webapp for MongoDB created for the Openshift Flex mongo demo.
+Mongo1 is an sample CRUD webapp created as a demo of MongoDB on the Openshift Flex platform.
 
 Building on command line:
     #> mvn clean package
@@ -37,7 +37,7 @@ Openshift Flex demo instructions:
 
     6) Deploy and then start your application
 
-    7) Your application should be available at http://<cluster DNS>/mongo1/msglist.jsp
+    7) Your application should be available at http://&gt;cluster DNS&lt;/mongo1/msglist.jsp
 
     8) By default the application starts out using mysql and hibernate. To
        change it to use mongoDB you need to modify the
