@@ -10,13 +10,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
-
 @UrlBinding("/messages")
 public class MessageListActionBean implements ActionBean {
 	
@@ -41,22 +34,10 @@ public class MessageListActionBean implements ActionBean {
 	
 	 public void getMsgList() {
 			try {
-	    		
-				Mongo m = MongoHolder.MONGOS.connect(new MongoURI("mongodb://localhost"));
-	    		DB db = m.getDB("msgsdb");
-	    		DBCollection coll = db.getCollection("msgs");
-	    		DBCursor cursor = coll.find();
-	    		System.out.println("Cursor count:"+cursor.count());
+				MessageDao dao = MessageDao.getDao();
+				setMsgs(dao.getMessages());
 	    		System.out.println("vector size:"+msgs.size());
-	    		
-	    		 while(cursor.hasNext()){
-	    		     DBObject obj = cursor.next();
-	    		     msgs.add(obj.toMap());
-	    		 }
-	    		 System.out.println("vector size:"+msgs.size());
-	    		 
-	    		
-	    	} catch (Exception e) {
+	    		} catch (Exception e) {
 	    		e.printStackTrace();
 	    		return;
 	    	}

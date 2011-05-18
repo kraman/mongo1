@@ -8,13 +8,6 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
-import com.mongodb.WriteConcern;
-
 @UrlBinding("/add")
 public class AddMessageActionBean implements ActionBean {
     private ActionBeanContext context;
@@ -39,20 +32,9 @@ public class AddMessageActionBean implements ActionBean {
     public Resolution addMsg() {
     	
     	try {
-    		Mongo m = MongoHolder.MONGOS.connect(new MongoURI("mongodb://localhost"));
-    		
-    		DB db = m.getDB("msgsdb");
-    		DBCollection coll = db.getCollection("msgs");
-    		coll.setWriteConcern(WriteConcern.SAFE);
-    		
-    		BasicDBObject doc = new BasicDBObject();
-
-            doc.put("msg", this.getMsg());
-            doc.put("author", this.getAuthor());
-            coll.insert(doc);
+    		MessageDao dao = MessageDao.getDao();
+    		dao.addMessage(getMsg(), getAuthor());
             System.out.println("Added Message");
-            
-    		
     	} catch (Exception e) {
     		e.printStackTrace();
     		return null;
