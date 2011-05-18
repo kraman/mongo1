@@ -1,0 +1,51 @@
+Mongo1 is an example CRUD webapp for MongoDB created for the Openshift Flex mongo demo.
+
+Building on command line:
+    #> mvn clean package
+
+Creating eclipse project files
+    #> mvn eclipse:eclipse
+
+Openshift Flex demo instructions:
+    1) Create a new cluster
+        Refer to http://docs.redhat.com/docs/en-US/OpenShift/1.0/html/OpenShift_Flex_User_Guide/index.html for instructions.
+
+    2) Create a new application
+        Name: mongo1
+        Version: 1.0
+
+    3) Select application components:
+        Application type: Tomcat
+        Application Server Version: Tomcat 6.0
+        Language Version: JDK 6.0
+        Database: MySQL Server
+        Other Components: mongoDB-1.6.5
+
+    4) On the Files tab upload sample application war file
+
+    5) Configuration:
+        a) MongoDB
+            - Unselect config server replication
+            - Select a replica set of size 1
+            - Select minimum of 1 shard
+            - Save your changes
+        b) MySQL
+            - Database initialization script: 
+                bundle/mongo1.war.extracted/WEB-INF/classes/init.sql
+            - Add hibernate.cfg.xml to "Configuration file patterns"
+            - Save your changes
+
+    6) Deploy and then start your application
+
+    7) Your application should be available at http://<cluster DNS>/mongo1/msglist.jsp
+
+    8) By default the application starts out using mysql and hibernate. To
+       change it to use mongoDB you need to modify the
+       bundle/mongo1.war.extracted/WEB-INF/classes/example.properties under the files
+       tab and (un)comment the appropriate line.
+
+Links:
+    * MongoDB: http://www.mongodb.org/
+    * Openshift Flex: http://openshift.redhat.com/app/flex
+
+
