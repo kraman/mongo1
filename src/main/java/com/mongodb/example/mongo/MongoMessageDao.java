@@ -30,6 +30,9 @@ package com.mongodb.example.mongo;
 
 import java.util.Map;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Properties;
 
 import org.bson.types.ObjectId;
 
@@ -39,15 +42,33 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
+import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import com.mongodb.example.MessageDao;
 
 public class MongoMessageDao extends MessageDao{
+    private Mongo m;
+
+    public MongoMessageDao() throws Exception{
+        //com.mongodb.example.mongo_servers
+		Properties exampleProps = new Properties();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		exampleProps.load(classLoader.getResourceAsStream("/example.properties"));
+		String mongoServersStr = exampleProps.getProperty("com.mongodb.example.mongo_servers", "HbMessageDao");
+        String mongoServers[] = mongoServersStr.split(",");
+        if(mongoServers.length == 1){
+            m = new Mongo(new ServerAddress(mongoServersStr));
+        }else{
+            List<ServerAddress> addr = new ArrayList<ServerAddress>();
+            for(String a : mongoServers){
+                addr.add(new ServerAddress(a));
+            }
+            m = new Mongo(addr);
+        }
+    }
+
 	@Override
 	public void addMessage(String msg, String author) throws Exception{
-		Mongo m = MongoHolder.MONGOS.connect(new MongoURI("mongodb://localhost"));
-		
 		DB db = m.getDB("msgsdb");
 		DBCollection coll = db.getCollection("msgs");
 		coll.setWriteConcern(WriteConcern.SAFE);
@@ -62,8 +83,6 @@ public class MongoMessageDao extends MessageDao{
 	
 	@Override
 	public void deleteMessage(String msgId) throws Exception{
-		Mongo m = MongoHolder.MONGOS.connect(new MongoURI("mongodb://localhost"));
-		
 		DB db = m.getDB("msgsdb");
 		DBCollection coll = db.getCollection("msgs");
 		coll.setWriteConcern(WriteConcern.SAFE);
@@ -76,7 +95,6 @@ public class MongoMessageDao extends MessageDao{
 	@Override
 	public Vector<Map<String, String>> getMessages() throws Exception{
 		Vector<Map<String, String>> msgs = new Vector<Map<String,String>>();
-		Mongo m = MongoHolder.MONGOS.connect(new MongoURI("mongodb://localhost"));
 		DB db = m.getDB("msgsdb");
 		DBCollection coll = db.getCollection("msgs");
 		DBCursor cursor = coll.find();
